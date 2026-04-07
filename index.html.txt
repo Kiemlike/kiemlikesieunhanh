@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPanel - Orders</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+}
+
+.header {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    background: #1e293b;
+    text-align: center;
+}
+
+.container {
+    padding: 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+.card {
+    background: #1e293b;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.status {
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.pending { background: orange; }
+.completed { background: green; }
+.cancel { background: red; }
+.processing { background: blue; }
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">MyPanel</div>
+
+<div class="container">
+
+<input placeholder="🔍 Tìm đơn..." id="search">
+<select id="status">
+<option value="">Tất cả trạng thái</option>
+<option value="pending">Pending</option>
+<option value="processing">Processing</option>
+<option value="completed">Completed</option>
+<option value="cancel">Cancel</option>
+</select>
+
+<div id="orders"></div>
+
+</div>
+
+<script>
+
+let orders = [
+{ id: 1001, service: "Facebook Like", link: "fb.com/post1", qty: 1000, done: 800, status: "processing" },
+{ id: 1002, service: "TikTok Follow", link: "tiktok.com/user", qty: 500, done: 500, status: "completed" },
+{ id: 1003, service: "YouTube View", link: "youtube.com/video", qty: 10000, done: 2000, status: "pending" }
+];
+
+function render() {
+    let html = "";
+    let search = document.getElementById("search").value.toLowerCase();
+    let status = document.getElementById("status").value;
+
+    orders.forEach(o => {
+        if (
+            (search && !o.link.includes(search) && !o.service.toLowerCase().includes(search)) ||
+            (status && o.status !== status)
+        ) return;
+
+        html += `
+        <div class="card">
+            <div class="row"><b>#${o.id}</b> <span class="status ${o.status}">${o.status}</span></div>
+            <div>Dịch vụ: ${o.service}</div>
+            <div>Link: ${o.link}</div>
+            <div>Tiến độ: ${o.done}/${o.qty}</div>
+        </div>`;
+    });
+
+    document.getElementById("orders").innerHTML = html;
+}
+
+render();
+
+document.getElementById("search").oninput = render;
+document.getElementById("status").onchange = render;
+
+</script>
+
+</body>
+</html>
